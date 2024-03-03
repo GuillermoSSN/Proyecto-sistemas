@@ -10,10 +10,11 @@ echo "4. Poner el marcha el servicio"
 echo "5. Parar el servicio"
 echo "6. Ver el estado del servicio"
 echo "7. Eliminar el servicio ssh"
-echo "8. salir"
+echo "8. Ver la ip del Sistemas"
+echo "9. salir"
 echo "----------------------------"
 	read -p "Elige una opción " opcion
-	prueba=$(echo $opcion | grep -E "^[0-8]{1}\b")
+	prueba=$(echo $opcion | grep -E "^[0-9]{1}\b")
 if [ -z "$prueba" ]; then
 	echo "Lo escribe un numero que este dentro del parametro"
 else
@@ -60,6 +61,10 @@ else
 		sudo apt-get purge openssh-server -y
 	fi
 	if [ $opcion -eq "8" ]; then
+		echo "Tu ip son las siguientes"
+		ip a | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}"
+	fi
+	if [ $opcion -eq "9" ]; then
 		echo "Adios"
 		break
 	fi
