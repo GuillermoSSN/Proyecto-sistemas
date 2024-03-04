@@ -15,6 +15,8 @@ echo "9. salir"
 echo "----------------------------"
 	read -p "Elige una opción " opcion
 	prueba=$(echo $opcion | grep -E "^[0-9]{1}\b")
+	fin1=$(sudo systemctl status ssh | grep -E "dead")
+	fin2=$(sudo systemctl status ssh | grep -E "running")
 if [ -z "$prueba" ]; then
 	echo "Lo escribe un numero que este dentro del parametro"
 else
@@ -28,46 +30,55 @@ else
 			echo "El servicio si esta instalado"
 		fi
 	fi
-	if [ $opcion -eq "1" ]; then
-		bash ssh.sh -p
-	fi
-	if [ $opcion -eq "2" ]; then
-		sudo bash ssh.sh -d
-	fi
-	if [ $opcion -eq "3" ]; then
-		sudo bash ssh.sh -a
-	fi
-	if [ $opcion -eq "4" ]; then
-		echo "El servicio se esta poniendo en marcha"
-		sudo systemctl start ssh
-	fi
-	if [ $opcion -eq "5" ]; then
-		echo "El servicio se esta parando"
-		sudo systemctl stop ssh
-	fi
-	if [ $opcion -eq "6" ]; then
-		echo "Vamos a ver el estado del servicio" 
-		prueba3=$(sudo systemctl status ssh | grep -E "running")
-		prueba4=$(sudo systemctl status ssh | grep -E "dead")
-		if [ -n "$prueba3" ]; then
-			echo "El servicio esta activo"
+
+	if [ -z "$fin1" -a -z "$fin2" ]; then
+		echo "El servicio no esta instalado utiliza la opción 0"
+	else
+
+		if [ $opcion -eq "1" ]; then
+			bash ssh.sh -p
 		fi
-		if [ -n "$prueba4" ]; then
-			echo "El servicio esta parado"
+		if [ $opcion -eq "2" ]; then
+			sudo bash ssh.sh -d
 		fi
+		if [ $opcion -eq "3" ]; then
+			sudo bash ssh.sh -a
+		fi
+		if [ $opcion -eq "4" ]; then
+			echo "El servicio se esta poniendo en marcha"
+			sudo systemctl start ssh
+		fi
+		if [ $opcion -eq "5" ]; then
+			echo "El servicio se esta parando"
+			sudo systemctl stop ssh
+		fi
+		if [ $opcion -eq "6" ]; then
+			echo "Vamos a ver el estado del servicio" 
+			prueba3=$(sudo systemctl status ssh | grep -E "running")
+			prueba4=$(sudo systemctl status ssh | grep -E "dead")
+			if [ -n "$prueba3" ]; then
+				echo "El servicio esta activo"
+			fi
+			if [ -n "$prueba4" ]; then
+				echo "El servicio esta parado"
+			fi
+		fi
+		if [ $opcion -eq "7" ]; then
+			echo "El servicio se desistalo"
+			sudo apt-get purge openssh-server -y
+		fi
+		if [ $opcion -eq "8" ]; then
+			echo "Tu ip son las siguientes"
+			ip a | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}"
+		fi
+
 	fi
-	if [ $opcion -eq "7" ]; then
-		echo "El servicio se desistalo"
-		sudo apt-get purge openssh-server -y
-	fi
-	if [ $opcion -eq "8" ]; then
-		echo "Tu ip son las siguientes"
-		ip a | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}"
-	fi
-	if [ $opcion -eq "9" ]; then
-		echo "Adios"
-		break
-	fi
+		if [ $opcion -eq "9" ]; then
+			echo "Adios"
+			break
+
+		fi
+
 fi
 done
 
